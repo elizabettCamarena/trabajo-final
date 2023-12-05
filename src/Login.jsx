@@ -1,41 +1,43 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { BrowserRouter } from 'react-router-dom';
+import { useLogin } from "./hooks/useLogin";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import Auth from "./hoc/auth";
+
 
 const Login = () => {
     const [form, setForm] = useState({
         email: "",
         password: ""
     });
-    const [error, setError] = useState("");
     const navigate = useNavigate();
     const { login, user, loadingSession } = useLogin();
 
-    if(loadingSession) return (<h1>Cargando...</h1>)
-
-    if(!loadingSession && user) {
-        return <Navigate to="/" replace={true} />
-    }
-
+   
     const handleChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
-        setError("")
+        
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         try {
-            const res = await login(form.email, form.password)
+            const res = await Login(form.email, form.password)
             navigate("/");
         }
         catch (err) {
-            setError(err.message)
+            if(err.code === "auth/invalid-login-credentials"){
+                setError ("credenciales invalidas")
+            }
+            
+            alert(err.message)
         }
     }
-
 
     return (
         <div className="flex flex-col w-full h-full items-center">
@@ -57,7 +59,6 @@ const Login = () => {
                         onChange={handleChange}
                         />
                     <button type="submit" className="w-full p-2 mt-4 bg-slate-500 text-white rounded-md hover:bg-slate-600">Iniciar sesión</button>
-                    {error ? <span className="text-red-500 mt-2">{error}</span> : null}
                 </form>
             </div>
         </div>
