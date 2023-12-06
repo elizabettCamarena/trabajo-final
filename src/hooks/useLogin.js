@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import { auth } from "../main";
 
@@ -8,14 +8,7 @@ export const useLogin = () => {
     const [loadingSignIn, setLoadingSignIn] = useState(false);
 
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-            setLoadingSession(false);
-        });
-
-        return () => unsubscribe();
-    }, [])
+ 
   
 
 
