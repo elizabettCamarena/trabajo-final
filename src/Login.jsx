@@ -19,7 +19,7 @@ const Login = () => {
             ...form,
             [e.target.name]: e.target.value
         })
-        
+      setError("")  
     }
 
     const handleSubmit = async (e) => {
