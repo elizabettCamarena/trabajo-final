@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { BrowserRouter } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useLogin } from "./hooks/useLogin";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import Auth from "./hoc/auth";
+
 
 
 const Login = () => {
@@ -11,8 +9,9 @@ const Login = () => {
         email: "",
         password: ""
     });
-    const navigate = useNavigate();
-    const { login, user, loadingSession } = useLogin();
+    const [error, setError] = useState("");
+    const { login } = useLogin();
+    const Navigate = useNavigate();
 
    
     const handleChange = (e) => {
@@ -27,13 +26,12 @@ const Login = () => {
         e.preventDefault();
         
         try {
-            const res = await Login(form.email, form.password)
-            navigate("/");
+            const res = await login(form.email, form.password)
+            Navigate("/");
         }
         catch (err) {
-            if(err.code === "auth/invalid-login-credentials"){
-                setError ("credenciales invalidas")
-            }
+         setError (err.message)
+            
             
             alert(err.message)
         }
